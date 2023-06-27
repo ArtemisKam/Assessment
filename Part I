@@ -1,0 +1,18 @@
+#Query 1
+
+SELECT city, (SUM(CASE WHEN cuisine = 'Breakfast' THEN amount / no_of_orders ELSE 0 END)) AS breakfast_basket, 
+SUM(amount) / SUM(no_of_orders) AS efood_basket,
+SUM(CASE WHEN cuisine = 'Breakfast' THEN no_of_orders / no_of_users ELSE 0 END) AS breakfast_freq, 
+SUM(no_of_orders) / SUM(no_of_users) AS efood_freq,
+SUM(CASE WHEN cuisine = 'Breakfast' AND (no_of_orders > 3) THEN 1 ELSE 0 END) /
+SUM(CASE WHEN cuisine = 'Breakfast' THEN no_of_users ELSE 0 END) * 100 AS breakfast_users3freq_perc,
+SUM(CASE WHEN (no_of_orders > 3) THEN 1 ELSE 0 END) / SUM(no_of_users) * 100 AS efood_users3freq_perc,
+FROM (SELECT COUNT(DISTINCT order_id) AS no_of_orders, COUNT(DISTINCT user_id) AS no_of_users, SUM(amount) AS amount,
+      city, cuisine 
+      FROM main_assessment.orders
+      GROUP BY city, cuisine) AS subquery
+GROUP BY city
+HAVING SUM(no_of_orders) > 1000 
+ORDER BY SUM(CASE WHEN cuisine = 'Breakfast' THEN no_of_orders ELSE 0 END) DESC
+LIMIT 5;
+
