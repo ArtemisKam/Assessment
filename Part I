@@ -16,3 +16,24 @@ HAVING SUM(no_of_orders) > 1000
 ORDER BY SUM(CASE WHEN cuisine = 'Breakfast' THEN no_of_orders ELSE 0 END) DESC
 LIMIT 5;
 
+
+#Query 2
+
+SELECT city, user_id, no_of_orders,
+  (no_of_orders / total) * 100.0 AS percentage
+FROM (
+  SELECT city, user_id, COUNT(order_id) AS no_of_orders,
+    SUM(COUNT(order_id)) OVER (PARTITION BY city) AS total
+  FROM `main_assessment.orders`
+  GROUP BY city, user_id
+) subquery
+WHERE user_id IN (
+  SELECT user_id
+  FROM (
+    SELECT city, user_id, COUNT(order_id) AS order_count,
+      ROW_NUMBER() OVER (PARTITION BY city ORDER BY COUNT(order_id) DESC) AS user_rank
+    FROM `main_assessment.orders`
+    GROUP BY city, user_id
+  ) top_users
+  WHERE user_rank <= 10
+);
