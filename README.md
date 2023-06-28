@@ -8,4 +8,4 @@ that make more than 3 "Breakfast" orders.
 
 Plan II: The code firstly selects the user_id and counts the order_ids, to calculate the frequency of orders and then adds all the different 
 amount values to calculate the total order value. The next step is the use of the quantiles methodology, in order to create the user segments. 
-So, 5 quantiles are created and according to different values of the frequency and the monetary value, they are characterized as "High Value", "Loyal", "Low Value" and "Promising". For example, if monetary and frequency belong in the 4th or 5th quantile, then the corresponding customers are considered as "High Value".
+So, 5 quantiles are created and according to different values of the frequency and the monetary value, the users are characterized as "High Value", "Loyal", "Low Value" and "Promising". For example, if monetary and frequency belong in the 4th or 5th quantile, then the corresponding customers are considered as "High Value".
