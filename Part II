@@ -1,0 +1,13 @@
+#Part II
+
+SELECT user_id AS customer_id, COUNT(DISTINCT order_id) AS frequency, ROUND(SUM(amount)) AS monetary,
+  NTILE(5) OVER (ORDER BY COUNT(DISTINCT order_id)) AS frequency_quintile,
+  NTILE(5) OVER (ORDER BY SUM(amount)) AS monetary_quintile,
+  CASE
+    WHEN NTILE(5) OVER (ORDER BY SUM(amount)) >= 4 AND NTILE(5) OVER (ORDER BY COUNT(DISTINCT order_id)) >= 4 THEN "High Value"
+    WHEN NTILE(5) OVER (ORDER BY COUNT(DISTINCT order_id)) >= 4 THEN "Loyal"
+    WHEN NTILE(5) OVER (ORDER BY SUM(amount)) <= 2 AND NTILE(5) OVER (ORDER BY COUNT(DISTINCT order_id)) <= 2 THEN "Low Value"
+    WHEN NTILE(5) OVER (ORDER BY SUM(amount)) = 3 AND NTILE(5) OVER (ORDER BY COUNT(DISTINCT order_id)) = 3 THEN "Promising"
+  END AS segment
+FROM main_assessment.orders
+GROUP BY user_id;
